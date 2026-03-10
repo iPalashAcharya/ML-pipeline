@@ -1,0 +1,5 @@
+data/raw/
+models/saved_models/
+models/logs/
+__pycache__/
+*.pyc
