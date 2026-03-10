@@ -1,0 +1,66 @@
+data:
+  raw_data_path: "data/raw/"
+  processed_data_path: "data/processed/"
+  sample_rate: 100  # Hz
+  window_size: 100  # samples (1 second at 100Hz)
+  overlap: 50       # 50% overlap for sliding window
+  
+features:
+  time_domain:
+    - mean
+    - std
+    - min
+    - max
+    - rms
+    - peak_to_peak
+    - zero_crossing_rate
+    - skewness
+    - kurtosis
+  
+  frequency_domain:
+    enabled: true
+    fft_bins: 32
+    dominant_frequency: true
+  
+  derived:
+    - acceleration_magnitude
+    - jerk_magnitude
+    - gyro_magnitude
+
+model:
+  type: "random_forest"  # Options: random_forest, xgboost, neural_network
+  
+  random_forest:
+    n_estimators: 100
+    max_depth: 15
+    min_samples_split: 5
+    min_samples_leaf: 2
+    class_weight: "balanced"
+  
+  xgboost:
+    n_estimators: 100
+    max_depth: 6
+    learning_rate: 0.1
+    subsample: 0.8
+  
+  neural_network:
+    layers: [128, 64, 32]
+    dropout: 0.3
+    activation: "relu"
+    epochs: 50
+    batch_size: 32
+
+training:
+  test_size: 0.2
+  validation_size: 0.2
+  random_state: 42
+  stratify: true
+
+export:
+  model_path: "models/saved_models/"
+  tflite_path: "models/tflite/"
+  quantization: true  # Post-training quantization for smaller model
+  
+thresholds:
+  confidence_threshold: 0.75
+  debounce_time: 5
